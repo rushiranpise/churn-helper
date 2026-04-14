@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Churning Helper</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0,1" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #fef7ff;
+            font-family: 'Roboto', sans-serif;
+            padding: 16px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .card {
+            background: #FFFBFE;
+            border-radius: 12px;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,0.3), 0 1px 3px 1px rgba(0,0,0,0.15);
+            padding: 20px 16px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+        h2 {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin: 0;
+        }
+        .collapsible-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 4px 0;
+        }
+        .toggle-icon {
+            font-size: 24px;
+            color: #6750A4;
+            transition: transform 0.2s;
+        }
+        .form-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: flex-end;
+            justify-content: center;
+            margin-top: 16px;
+            width: 100%;
+        }
+        .input-group {
+            flex: 1;
+            min-width: 140px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #49454F;
+            text-align: center;
+        }
+        input, select {
+            background: #E7E0EC;
+            border: 1px solid #79747E;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            text-align: center;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            white-space: nowrap;
+        }
+        .btn-primary {
+            background: #6750A4;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #4f378a;
+        }
+        .btn-outline {
+            border: 1px solid #79747E;
+            color: #6750A4;
+        }
+        .btn-outline:hover {
+            background: rgba(103, 80, 164, 0.08);
+        }
+        .btn-danger {
+            color: #BA1A1A;
+            border: 1px solid #BA1A1A;
+        }
+        .btn-danger:hover {
+            background: #FFDAD6;
+        }
+        .btn-notify {
+            background: #EADDFF;
+            color: #21005E;
+            border: none;
+        }
+        .btn-notify:disabled {
+            opacity: 0.7;
+            cursor: default;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            min-width: 750px;
+        }
+        .data-table th {
+            text-align: center;
+            padding: 12px 8px;
+            background-color: #f3edf7;
+            font-weight: 500;
+            cursor: pointer;
+            user-select: none;
+        }
+        .data-table th:hover {
+            background-color: #e8e0f0;
+        }
+        .data-table td {
+            text-align: center;
+            padding: 12px 8px;
+            border-bottom: 1px solid #e2dce6;
+            vertical-align: middle;
+        }
+        .data-table th:last-child,
+        .data-table td:last-child {
+            width: 90px;
+            cursor: default;
+        }
+        .data-table th:last-child:hover {
+            background-color: #f3edf7;
+        }
+        .sort-icon {
+            font-size: 14px;
+            margin-left: 4px;
+            vertical-align: middle;
+        }
+        .churn-date {
+            font-weight: 600;
+            color: #21005E;
+            font-size: 0.9rem;
+        }
+        .days-badge {
+            font-size: 0.7rem;
+            background: #EADDFF;
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 30px;
+            width: fit-content;
+            font-weight: 500;
+            margin: 0 auto;
+        }
+        .days-badge.overdue {
+            background: #FFDAD6;
+            color: #BA1A1A;
+        }
+        .days-badge.today {
+            background: #FFE6CC;
+            color: #B85C00;
+        }
+        .action-icons {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            align-items: center;
+        }
+        .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #49454F;
+        }
+        .material-symbols-outlined {
+            font-size: 18px;
+        }
+        .empty-row td {
+            text-align: center;
+            padding: 30px;
+            color: #49454F;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .cards-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .churn-card {
+            background: #FFFBFE;
+            border: 1px solid #e2dce6;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        .card-field {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0eef2;
+        }
+        .card-field:last-child {
+            border-bottom: none;
+        }
+        .field-label {
+            font-weight: 500;
+            color: #49454F;
+            font-size: 0.8rem;
+        }
+        .field-value {
+            font-weight: 500;
+            color: #1C1B1F;
+            text-align: right;
+        }
+        .card-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 12px;
+            padding-top: 8px;
+        }
+        .snack-message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1c1b1f;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 28px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            z-index: 1000;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,0.3);
+            animation: fadeOut 3s forwards;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        @keyframes fadeOut {
+            0% { opacity: 1; visibility: visible; }
+            80% { opacity: 1; }
+            100% { opacity: 0; visibility: hidden; }
+        }
+        @media (max-width: 600px) {
+            body { padding: 12px; }
+            .card { padding: 16px; }
+            .form-grid { flex-direction: column; align-items: stretch; }
+            .input-group { min-width: 100%; }
+            .btn-group { display: flex; justify-content: center; margin-top: 8px; }
+            .flex-between { flex-direction: column; align-items: stretch; text-align: center; }
+            .snack-message { white-space: normal; text-align: center; max-width: 90%; }
+            .card > div:first-child { flex-direction: column; align-items: center; }
+            #notifyBtn, #clearAllBtn { white-space: normal; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 12px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="material-symbols-outlined" style="font-size: 28px; color: #6750A4;">autorenew</span>
+                <h1>Churning Helper</h1>
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+                <button id="notifyBtn" class="btn btn-notify">
+                    <span class="material-symbols-outlined">notifications</span>
+                </button>
+                <button id="clearAllBtn" class="btn btn-outline btn-danger">
+                    <span class="material-symbols-outlined">delete_sweep</span>
+                </button>
+            </div>
+        </div>
+        <p style="color: #49454F; text-align: center; font-size: 0.85rem;">Track closed accounts — get notified when cooling period ends. Click column headers to sort.</p>
+    </div>
+    <!-- Collapsible Add Section -->
+    <div class="card">
+        <div class="collapsible-header" id="toggleAddSection">
+            <h2><span id="formTitle">➕ Add New</span></h2>
+            <span class="material-symbols-outlined toggle-icon" id="toggleIcon">expand_more</span>
+        </div>
+        <div id="addFormContent" style="display: none;">
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>Account name</label>
+                    <input type="text" id="accountName" placeholder="e.g., Sofi">
+                </div>
+                <div class="input-group">
+                    <label>Closed date</label>
+                    <input type="date" id="closedDate">
+                </div>
+                <div class="input-group">
+                    <label>Cooling period ( in days)</label>
+                    <select id="coolingPeriodSelect"></select>
+                </div>
+                <div class="btn-group">
+                    <button id="submitBtn" class="btn btn-primary">
+                        <span class="material-symbols-outlined">add</span> Add
+                    </button>
+                    <button id="cancelEditBtn" class="btn btn-outline" style="display: none;">
+                        <span class="material-symbols-outlined">close</span> Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Churning log section -->
+    <div class="card">
+        <div class="flex-between">
+            <h2>📋 List Of Churns </h2>
+            <span id="recordCount" style="background:#EADDFF; padding:4px 12px; border-radius:30px; font-size:0.8rem;">Total 0 Churns</span>
+        </div>
+        <div id="logContainer" class="table-wrapper">
+            <!-- Dynamic content -->
+        </div>
+    </div>
+</div>
+<script>
+    let entries = [];
+    let editModeId = null;
+    let notificationPermissionGranted = false;
+    let notificationCheckInterval = null;
+    let sortColumn = 'nextChurn';   
+    let sortDirection = 'asc';       
+    const accountNameInput = document.getElementById('accountName');
+    const closedDateInput = document.getElementById('closedDate');
+    const coolingSelect = document.getElementById('coolingPeriodSelect');
+    const submitBtn = document.getElementById('submitBtn');
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+    const formTitleSpan = document.getElementById('formTitle');
+    const clearAllBtn = document.getElementById('clearAllBtn');
+    const recordCountSpan = document.getElementById('recordCount');
+    const notifyBtn = document.getElementById('notifyBtn');
+    const logContainer = document.getElementById('logContainer');
+    const addFormContent = document.getElementById('addFormContent');
+    const toggleAddSection = document.getElementById('toggleAddSection');
+    const toggleIcon = document.getElementById('toggleIcon');
+    let isFormCollapsed = true;
+    function toggleAddForm() {
+        isFormCollapsed = !isFormCollapsed;
+        addFormContent.style.display = isFormCollapsed ? 'none' : 'block';
+        toggleIcon.textContent = isFormCollapsed ? 'expand_more' : 'expand_less';
+    }
+    toggleAddSection.addEventListener('click', toggleAddForm);
+    function updateNotificationButtonUI() {
+        if (notificationPermissionGranted) {
+            notifyBtn.innerHTML = '<span class="material-symbols-outlined">notifications_active</span>';
+            notifyBtn.disabled = true;
+        } else {
+            notifyBtn.innerHTML = '<span class="material-symbols-outlined">notifications</span>';
+            notifyBtn.disabled = false;
+        }
+    }
+    function requestNotificationPermission() {
+        if (!("Notification" in window)) { showSnackbar("❌ Notifications not supported"); return; }
+        if (Notification.permission === "granted") {
+            notificationPermissionGranted = true;
+            updateNotificationButtonUI();
+            showSnackbar("✅ Already enabled");
+            checkAndSendNotifications();
+        } else if (Notification.permission !== "denied") {
+            Notification.requestPermission().then(permission => {
+                if (permission === "granted") {
+                    notificationPermissionGranted = true;
+                    updateNotificationButtonUI();
+                    showSnackbar("🔔 Notifications enabled!");
+                    checkAndSendNotifications();
+                } else { showSnackbar("❌ Permission denied"); }
+            });
+        } else { showSnackbar("❌ Blocked. Allow in browser settings."); }
+    }
+    function getLastNotifiedMap() {
+        const stored = localStorage.getItem('churning_last_notified');
+        return stored ? JSON.parse(stored) : {};
+    }
+    function setLastNotifiedMap(map) {
+        localStorage.setItem('churning_last_notified', JSON.stringify(map));
+    }
+    function sendNotificationForEntry(entry, nextChurnUTC) {
+        if (!notificationPermissionGranted) return false;
+        const lastMap = getLastNotifiedMap();
+        const todayUTC = getTodayUTC();
+        const nextDateStr = nextChurnUTC.toISOString().split('T')[0];
+        const key = entry.id.toString();
+        if (lastMap[key] && lastMap[key] >= nextDateStr) return false;
+        new Notification(`🔔 ${entry.name}`, {
+            body: `Cooling period ended on ${formatUTCDate(nextChurnUTC)}. You can churn now!`,
+            icon: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%236750A4"%3E%3Cpath d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0 13c-2.33 0-4.31-1.46-5.11-3.5h10.22c-.8 2.04-2.78 3.5-5.11 3.5z"/%3E%3C/svg%3E',
+            silent: false,
+        });
+        lastMap[key] = nextDateStr;
+        setLastNotifiedMap(lastMap);
+        return true;
+    }
+    function checkAndSendNotifications() {
+        if (!notificationPermissionGranted) return;
+        const todayUTC = getTodayUTC();
+        let anySent = false;
+        for (const entry of entries) {
+            const nextUTC = computeNextChurnUTC(entry.closedDateISO, entry.coolingPeriod);
+            if (nextUTC && nextUTC <= todayUTC) {
+                if (sendNotificationForEntry(entry, nextUTC)) anySent = true;
+            }
+        }
+        if (anySent) renderResponsive();
+    }
+    function clearNotificationHistory() { localStorage.removeItem('churning_last_notified'); }
+    function parseUTCDate(iso) {
+        if (!iso) return null;
+        const [y, m, d] = iso.split('-').map(Number);
+        return new Date(Date.UTC(y, m-1, d));
+    }
+    function formatUTCDate(utcDate) {
+        if (!utcDate || isNaN(utcDate)) return '—';
+        return `${utcDate.getUTCMonth()+1}/${utcDate.getUTCDate()}/${utcDate.getUTCFullYear()}`;
+    }
+    function computeNextChurnUTC(closedISO, days) {
+        if (!closedISO) return null;
+        const closed = parseUTCDate(closedISO);
+        if (!closed) return null;
+        const next = new Date(closed);
+        next.setUTCDate(closed.getUTCDate() + days);
+        return next;
+    }
+    function getTodayUTC() {
+        const now = new Date();
+        return new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+    }
+    function daysBetween(d1, d2) { return Math.round((d2 - d1) / (1000*60*60*24)); }
+    function getDaysLeft(nextUTC) { return nextUTC ? daysBetween(getTodayUTC(), nextUTC) : null; }
+    function formatDaysLeft(days) {
+        if (days === null) return '';
+        if (days === 0) return '🎯 Today';
+        if (days > 0) return `${days} day${days !== 1 ? 's' : ''} left`;
+        return `⚠️ ${Math.abs(days)} day${Math.abs(days) !== 1 ? 's' : ''} overdue`;
+    }
+    function buildCoolingDropdown() {
+        coolingSelect.innerHTML = '';
+        for (let i = 0; i <= 365; i++) {
+            const opt = document.createElement('option');
+            opt.value = i;
+            opt.textContent = `${i} day${i !== 1 ? 's' : ''}`;
+            if (i === 30) opt.selected = true;
+            coolingSelect.appendChild(opt);
+        }
+    }
+    function persist() { localStorage.setItem('churning_helper_data', JSON.stringify(entries)); }
+    function loadData() {
+        const stored = localStorage.getItem('churning_helper_data');
+        if (stored) entries = JSON.parse(stored);
+        else {
+            entries = [{ id: Date.now()+1, name: 'Chime', closedDateISO: '2026-04-14', coolingPeriod: 34 }];
+            persist();
+        }
+    }
+    function escapeHtml(str) { return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
+    function getSortValue(entry, column) {
+        if (column === 'name') return entry.name.toLowerCase();
+        if (column === 'closedDate') return entry.closedDateISO; 
+        if (column === 'cooling') return entry.coolingPeriod;
+        if (column === 'nextChurn') {
+            const next = computeNextChurnUTC(entry.closedDateISO, entry.coolingPeriod);
+            return next ? next.getTime() : Infinity;
+        }
+        if (column === 'status') {
+            const next = computeNextChurnUTC(entry.closedDateISO, entry.coolingPeriod);
+            const days = getDaysLeft(next);
+            return days === null ? Infinity : days;
+        }
+        return 0;
+    }
+    function sortEntries() {
+        entries.sort((a, b) => {
+            let valA = getSortValue(a, sortColumn);
+            let valB = getSortValue(b, sortColumn);
+            if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
+            if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
+            return 0;
+        });
+    }
+    function setSort(column) {
+        if (sortColumn === column) {
+            sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            sortColumn = column;
+            sortDirection = 'asc';
+        }
+        sortEntries();
+        renderResponsive();
+    }
+    function renderDesktopTable() {
+        if (!entries.length) {
+            return `<div class="table-wrapper"><table class="data-table"><tbody><tr class="empty-row"><td colspan="6">✨ No accounts yet. Add your first account ✨</td></tr></tbody></table></div>`;
+        }
+        const sortIcon = (col) => {
+            if (sortColumn !== col) return '<span class="sort-icon">▼</span>';
+            return sortDirection === 'asc' ? '<span class="sort-icon">▲</span>' : '<span class="sort-icon">▼</span>';
+        };
+        let html = `<div class="table-wrapper"><table class="data-table"><thead><tr>
+            <th onclick="window.sortByColumn('name')">Name ${sortIcon('name')}</th>
+            <th onclick="window.sortByColumn('closedDate')">Closed date ${sortIcon('closedDate')}</th>
+            <th onclick="window.sortByColumn('cooling')">Cooling (days) ${sortIcon('cooling')}</th>
+            <th onclick="window.sortByColumn('nextChurn')">Next Churn ${sortIcon('nextChurn')}</th>
+            <th onclick="window.sortByColumn('status')">Status ${sortIcon('status')}</th>
+            <th>Actions</th>
+        </tr></thead><tbody>`;
+        for (const entry of entries) {
+            const closedFmt = formatUTCDate(parseUTCDate(entry.closedDateISO));
+            const nextUTC = computeNextChurnUTC(entry.closedDateISO, entry.coolingPeriod);
+            const nextFmt = nextUTC ? formatUTCDate(nextUTC) : '—';
+            const daysLeft = getDaysLeft(nextUTC);
+            const badgeText = formatDaysLeft(daysLeft);
+            let badgeClass = 'days-badge';
+            if (daysLeft !== null && daysLeft < 0) badgeClass += ' overdue';
+            else if (daysLeft !== null && daysLeft === 0) badgeClass += ' today';
+            html += `<tr data-id="${entry.id}">
+                <td><strong>${escapeHtml(entry.name)}</strong></td>
+                <td>${closedFmt}</td>
+                <td>${entry.coolingPeriod} d</td>
+                <td><span class="churn-date">${nextFmt}</span></td>
+                <td>${badgeText ? `<span class="${badgeClass}">${badgeText}</span>` : '—'}</td>
+                <td class="action-icons">
+                    <button class="icon-btn edit-entry" data-id="${entry.id}" title="Edit"><span class="material-symbols-outlined">edit</span></button>
+                    <button class="icon-btn delete-entry" data-id="${entry.id}" title="Delete"><span class="material-symbols-outlined">delete</span></button>
+                </td>
+            </tr>`;
+        }
+        html += `</tbody></table></div>`;
+        return html;
+    }
+    function renderMobileCards() {
+        if (!entries.length) {
+            return `<div class="cards-list"><div class="churn-card" style="text-align:center; color:#49454F;">✨ No accounts yet. Add your first account ✨</div></div>`;
+        }
+        let html = `<div class="cards-list">`;
+        for (const entry of entries) {
+            const closedFmt = formatUTCDate(parseUTCDate(entry.closedDateISO));
+            const nextUTC = computeNextChurnUTC(entry.closedDateISO, entry.coolingPeriod);
+            const nextFmt = nextUTC ? formatUTCDate(nextUTC) : '—';
+            const daysLeft = getDaysLeft(nextUTC);
+            const badgeText = formatDaysLeft(daysLeft);
+            let badgeClass = 'days-badge';
+            if (daysLeft !== null && daysLeft < 0) badgeClass += ' overdue';
+            else if (daysLeft !== null && daysLeft === 0) badgeClass += ' today';
+            html += `
+            <div class="churn-card" data-id="${entry.id}">
+                <div class="card-field"><span class="field-label">Account</span><span class="field-value"><strong>${escapeHtml(entry.name)}</strong></span></div>
+                <div class="card-field"><span class="field-label">Closed date</span><span class="field-value">${closedFmt}</span></div>
+                <div class="card-field"><span class="field-label">Cooling period</span><span class="field-value">${entry.coolingPeriod} days</span></div>
+                <div class="card-field"><span class="field-label">Next Churn</span><span class="field-value">${nextFmt}</span></div>
+                ${badgeText ? `<div class="card-field"><span class="field-label">Status</span><span class="field-value"><span class="${badgeClass}">${badgeText}</span></span></div>` : ''}
+                <div class="card-actions">
+                    <button class="icon-btn edit-entry" data-id="${entry.id}" title="Edit"><span class="material-symbols-outlined">edit</span> Edit</button>
+                    <button class="icon-btn delete-entry" data-id="${entry.id}" title="Delete"><span class="material-symbols-outlined">delete</span> Delete</button>
+                </div>
+            </div>`;
+        }
+        html += `</div>`;
+        return html;
+    }
+    function attachCardEvents() {
+        document.querySelectorAll('.edit-entry').forEach(btn => {
+            btn.removeEventListener('click', handleEdit);
+            btn.addEventListener('click', handleEdit);
+        });
+        document.querySelectorAll('.delete-entry').forEach(btn => {
+            btn.removeEventListener('click', handleDelete);
+            btn.addEventListener('click', handleDelete);
+        });
+    }
+    function handleEdit(e) { startEditMode(parseInt(e.currentTarget.dataset.id)); }
+    function handleDelete(e) { deleteEntryById(parseInt(e.currentTarget.dataset.id)); }
+    function renderResponsive() {
+        const isNowMobile = window.innerWidth < 600;
+        if (isNowMobile) {
+            logContainer.innerHTML = renderMobileCards();
+            attachCardEvents();
+        } else {
+            logContainer.innerHTML = renderDesktopTable();
+            document.querySelectorAll('.edit-entry').forEach(btn => {
+                btn.addEventListener('click', (e) => startEditMode(parseInt(btn.dataset.id)));
+            });
+            document.querySelectorAll('.delete-entry').forEach(btn => {
+                btn.addEventListener('click', (e) => deleteEntryById(parseInt(btn.dataset.id)));
+            });
+        }
+        recordCountSpan.innerText = `${entries.length} record${entries.length !== 1 ? 's' : ''}`;
+    }
+    window.sortByColumn = function(column) {
+        setSort(column);
+    };
+    function addEntry() {
+        const name = accountNameInput.value.trim();
+        const closed = closedDateInput.value;
+        const cooling = parseInt(coolingSelect.value, 10);
+        if (!name) return showSnackbar('❌ Enter account name');
+        if (!closed) return showSnackbar('❌ Select closing date');
+        entries.push({ id: Date.now(), name, closedDateISO: closed, coolingPeriod: cooling });
+        sortEntries();  
+        persist();
+        renderResponsive();
+        resetForm();
+        showSnackbar(`✅ "${name}" added.`);
+        checkAndSendNotifications();
+    }
+    function updateEntry() {
+        if (!editModeId) return;
+        const name = accountNameInput.value.trim();
+        const closed = closedDateInput.value;
+        const cooling = parseInt(coolingSelect.value, 10);
+        if (!name) return showSnackbar('❌ Name required');
+        const idx = entries.findIndex(e => e.id === editModeId);
+        if (idx === -1) return resetForm();
+        entries[idx] = { ...entries[idx], name, closedDateISO: closed, coolingPeriod: cooling };
+        sortEntries();
+        persist();
+        renderResponsive();
+        resetForm();
+        showSnackbar(`✏️ Updated "${name}"`);
+        checkAndSendNotifications();
+    }
+    function deleteEntryById(id) {
+        const entry = entries.find(e => e.id === id);
+        if (!entry) return;
+        if (confirm(`Delete "${entry.name}"?`)) {
+            entries = entries.filter(e => e.id !== id);
+            sortEntries();
+            persist();
+            renderResponsive();
+            if (editModeId === id) resetForm();
+            showSnackbar(`🗑️ Removed "${entry.name}"`);
+            const lastMap = getLastNotifiedMap();
+            delete lastMap[id];
+            setLastNotifiedMap(lastMap);
+        }
+    }
+    function clearAllData() {
+        if (!entries.length) return showSnackbar('No data');
+        if (confirm('⚠️ Delete ALL accounts?')) {
+            entries = [];
+            persist();
+            renderResponsive();
+            resetForm();
+            clearNotificationHistory();
+            showSnackbar('All data cleared');
+        }
+    }
+    function startEditMode(id) {
+        const entry = entries.find(e => e.id === id);
+        if (!entry) return;
+        editModeId = id;
+        accountNameInput.value = entry.name;
+        closedDateInput.value = entry.closedDateISO;
+        coolingSelect.value = entry.coolingPeriod;
+        formTitleSpan.innerHTML = '✏️ Edit account';
+        submitBtn.innerHTML = '<span class="material-symbols-outlined">save</span> Update';
+        cancelEditBtn.style.display = 'inline-flex';
+        if (isFormCollapsed) toggleAddForm();
+    }
+    function resetForm() {
+        editModeId = null;
+        accountNameInput.value = '';
+        const today = new Date();
+        closedDateInput.value = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+        coolingSelect.value = '30';
+        formTitleSpan.innerHTML = '➕ Add New';
+        submitBtn.innerHTML = '<span class="material-symbols-outlined">add</span> Add';
+        cancelEditBtn.style.display = 'none';
+    }
+    function onSubmit() { editModeId !== null ? updateEntry() : addEntry(); }
+    function cancelEdit() { if (editModeId) resetForm(); showSnackbar('Edit cancelled'); }
+    function showSnackbar(msg) {
+        const old = document.querySelector('.snack-message');
+        if (old) old.remove();
+        const div = document.createElement('div');
+        div.className = 'snack-message';
+        div.textContent = msg;
+        document.body.appendChild(div);
+        setTimeout(() => div.remove(), 3000);
+    }
+    function startPeriodicNotificationCheck() {
+        if (notificationCheckInterval) clearInterval(notificationCheckInterval);
+        notificationCheckInterval = setInterval(() => {
+            if (notificationPermissionGranted) checkAndSendNotifications();
+        }, 60 * 60 * 1000);
+    }
+    function handleResize() { renderResponsive(); }
+    function init() {
+        buildCoolingDropdown();
+        loadData();
+        sortColumn = 'nextChurn';
+        sortDirection = 'asc';
+        sortEntries();
+        renderResponsive();
+        const today = new Date();
+        closedDateInput.value = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+        submitBtn.onclick = onSubmit;
+        cancelEditBtn.onclick = cancelEdit;
+        clearAllBtn.onclick = clearAllData;
+        notifyBtn.onclick = requestNotificationPermission;
+        accountNameInput.onkeypress = e => { if (e.key === 'Enter') onSubmit(); };
+        closedDateInput.onkeypress = e => { if (e.key === 'Enter') onSubmit(); };
+        window.addEventListener('resize', handleResize);
+        if ("Notification" in window && Notification.permission === "granted") {
+            notificationPermissionGranted = true;
+            checkAndSendNotifications();
+        }
+        updateNotificationButtonUI();
+        startPeriodicNotificationCheck();
+    }
+    init();
+</script>
+</body>
+</html>
