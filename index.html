@@ -298,7 +298,7 @@
     <div class="card">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 12px;">
             <div style="display: flex; align-items: center; gap: 8px;">
-                <span class="material-symbols-outlined" style="font-size: 28px; color: #6750A4;">autorenew</span>
+                <!-- <span class="material-symbols-outlined" style="font-size: 28px; color: #6750A4;">autorenew</span> -->
                 <h1>Churning Helper</h1>
             </div>
             <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
@@ -310,12 +310,12 @@
                 </button>
             </div>
         </div>
-        <p style="color: #49454F; text-align: center; font-size: 0.85rem;">Track closed accounts — get notified when cooling period ends. Click column headers to sort.</p>
+        <!-- <p style="color: #49454F; text-align: center; font-size: 0.85rem;">Track closed accounts — get notified when cooling period ends. Click column headers to sort.</p> -->
     </div>
     <!-- Collapsible Add Section -->
     <div class="card">
         <div class="collapsible-header" id="toggleAddSection">
-            <h2><span id="formTitle">➕ Add New</span></h2>
+            <h2><span id="formTitle">Add New</span></h2>
             <span class="material-symbols-outlined toggle-icon" id="toggleIcon">expand_more</span>
         </div>
         <div id="addFormContent" style="display: none;">
@@ -346,7 +346,7 @@
     <!-- Churning log section -->
     <div class="card">
         <div class="flex-between">
-            <h2>📋 List Of Churns </h2>
+            <h2>List Of Churns </h2>
             <span id="recordCount" style="background:#EADDFF; padding:4px 12px; border-radius:30px; font-size:0.8rem;">Total 0 Churns</span>
         </div>
         <div id="logContainer" class="table-wrapper">
@@ -623,7 +623,7 @@
                 btn.addEventListener('click', (e) => deleteEntryById(parseInt(btn.dataset.id)));
             });
         }
-        recordCountSpan.innerText = `${entries.length} record${entries.length !== 1 ? 's' : ''}`;
+        recordCountSpan.innerText = `${entries.length} Churn${entries.length !== 1 ? 's' : ''}`;
     }
     window.sortByColumn = function(column) {
         setSort(column);
@@ -702,7 +702,7 @@
         const today = new Date();
         closedDateInput.value = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
         coolingSelect.value = '30';
-        formTitleSpan.innerHTML = '➕ Add New';
+        formTitleSpan.innerHTML = 'Add New';
         submitBtn.innerHTML = '<span class="material-symbols-outlined">add</span> Add';
         cancelEditBtn.style.display = 'none';
     }
